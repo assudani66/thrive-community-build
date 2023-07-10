@@ -1,0 +1,70 @@
+"use client"
+import React, { useEffect, useState } from 'react'
+import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+
+const EditProfile = ({ session }: { session: Session | null }) => {
+
+    const supabase = createClientComponentClient()
+    const  user = session?.user
+
+    const [userInfo,setUserInfo] = useState({
+        username:"",
+        full_name:"",
+        website:""
+    })
+
+    const getUserInfo = async() => {
+        try {
+            const {data,error} = await supabase.from('profiles').select(`full_name, username, website, avatar_url`).eq('id',user?.id).single()
+        
+            setUserInfo(
+                {...userInfo,
+                username:data?.username,
+                full_name:data?.full_name,
+                website:data?.website
+                }
+            )
+            if(error) throw error
+        } catch (error) {
+            console.log(error)
+            alert(error)
+        }
+    }
+    
+    useEffect(()=>{getUserInfo()},[])
+
+    const updateLoginState  = (e:React.ChangeEvent<HTMLInputElement>) => {
+        
+        setUserInfo({...userInfo,[e.target.name] :e.target.value})
+    }
+    const addInfo = async() => {
+        try{
+            let{error} = await supabase.from('profiles').upsert({
+                id: user?.id as string,
+                full_name : userInfo.full_name,
+                username:userInfo.username,
+                website:userInfo.website,
+                updated_at: new Date().toISOString()
+            }
+            )
+            if(error) throw error
+            alert('Profile Updated')
+        }catch(error){
+            alert("error in updating the data")
+        }
+        
+    }
+    
+
+  return (
+    <div className='flex-col space-y-4'>
+        <input className='w-full h-12 rounded-xl px-5 border border-neutral-200' placeholder='username' name='username' onChange={e=>updateLoginState(e)}  value={userInfo?.username} />
+        <input className='w-full h-12 rounded-xl px-5 border border-neutral-200' placeholder='full_name' name='full_name' onChange={e=>updateLoginState(e)}  value={userInfo?.full_name} />
+        <input className='w-full h-12 rounded-xl px-5 border border-neutral-200' placeholder='website' name='website' onChange={e=>updateLoginState(e)}  value={userInfo?.website} />
+        
+        <button className='mainbutton w-full rounded-lg' onClick={()=>addInfo()} >Update</button>
+    </div>
+  )
+}
+
+export default EditProfile
