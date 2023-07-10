@@ -1,13 +1,30 @@
-import React from 'react'
+"use client"
+import React, { useEffect, useState } from 'react'
 import { Post } from './postComponents/post'
 import MobileNavBar from './NavBars/MobileNavBar'
 import CreatePost from './postComponents/create-posts'
 import DesktopNavBar from './NavBars/DesktopNavBar'
 import Tags from './tags/tags'
 import SearchInput from './search_input'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import PostList from './postComponents/postList'
 
 const ResponsiveGrid = () => {
+
+  const [postList,setPostList] = useState<any[] | null>([])
+  const supabase = createClientComponentClient()
+  
+  const getAllPosts = async() => {
+    try{
+      const {data,error} = await supabase.from("posts").select()
+      setPostList(data)
+    }
+    catch(error){
+      console.error(error)
+    }
+  }
+  console.log(postList)
+  useEffect(()=>{getAllPosts()},[])
   return (
     <div className='flex items-center justify-center'>
       <div className='flex-col'>
@@ -51,7 +68,7 @@ const ResponsiveGrid = () => {
             
           </div>
 
-          <PostList/>
+          <PostList listOfPost={postList}/>
 
         </div>
         <div className='p-4 w-full h-screen hidden md:block '>

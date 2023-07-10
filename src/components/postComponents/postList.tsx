@@ -1,14 +1,14 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import { Post } from './post'
 
-const PostList = () => {
+const PostList = ({listOfPost}:{listOfPost:[]}) => {
+  console.log(listOfPost)
   return (
     <div>
-        <div className='flex-col '>
-          <Post comments/>
-          <Post comments/>
-          <Post comments/>
-          </div>
+      {listOfPost.map((post)=><div className='flex-col '>
+          <Post comments postinfo={post}/>
+          </div>)}
     </div>
   )
 }

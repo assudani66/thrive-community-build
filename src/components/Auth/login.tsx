@@ -1,7 +1,5 @@
 
-import React, { useEffect, useState } from 'react'
-import Logout from './logout'
-import SignUp from './signUp'
+import React, { useState } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 const Login = () => {
 

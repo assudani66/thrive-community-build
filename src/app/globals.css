@@ -2,26 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.mainbutton{
+  @apply px-5 py-2 bg-[#FE9063] shadow-[0px_9px_10px_0px_rgba(254,144,99,0.35)] text-white
 }
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.wrap {
+  text-align: center;
+  border: 10px double rgb(250, 9, 166);
+  background-clip: padding-box;
+  padding: 25px;
+}
+.inner {
+  background: rgba(255, 255, 255, .5);
+  margin: auto;
+  margin-top: 10px;
 }
