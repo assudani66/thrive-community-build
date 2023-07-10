@@ -1,5 +1,7 @@
-
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { PostFooter, PostHeader } from "./post-components"
+import { useEffect, useState } from "react";
+
 
 export type Post={
     id:string;
@@ -14,13 +16,31 @@ type PostProps = {
 
 export const Post = ({comments,postinfo}:PostProps) => {
 
-    console.log(postinfo)
+    const [imageUrl,setImageUrl] = useState("")
+
+    const supabase = createClientComponentClient()
+
+    const postImage = async() => {
+        try {
+            if(postinfo?.imagelink !== ""){
+                const {data,error} = await supabase.storage.from('public_posts').download(postinfo?.imagelink)
+                const url = URL.createObjectURL(data!)
+                console.log(url)
+                setImageUrl(url)
+                if(error) throw error
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    useEffect(()=>{postImage()},[])
+
     const PostBody = () =>{
         return(<div>
             <p>{postinfo?.postInfo}</p>
-            {postinfo?.imagelink && <img className="w-full aspect-square bg-indigo-500 rounded-lg shadow-[0px_4px_13px_0px_rgba(254,144,99,0.19)]" src="/testImage.png">
-        </img>
-            }
+            {postinfo?.imagelink && <img className="w-full aspect-square bg-indigo-500 rounded-lg shadow-[0px_4px_13px_0px_rgba(254,144,99,0.19)]" src={imageUrl}>
+        </img>}
         </div>) 
     }
 
