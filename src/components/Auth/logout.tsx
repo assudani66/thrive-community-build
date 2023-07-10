@@ -1,8 +1,10 @@
-import { supabase } from '@/services/supbaseClient'
+"use client"
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import React from 'react'
 const Logout = () => {
     
     const signOut = () => {
+      const supabase = createClientComponentClient()
         supabase.auth.signOut()
     }
 
