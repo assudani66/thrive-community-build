@@ -10,7 +10,6 @@ const CreatePost = ({ session }: { session: Session | null }) => {
   const [postData,setPostData] = useState<string>("")
   type userInfoTypes = {full_name:string}
   const [userInfo,setUserInfo] = useState< userInfoTypes| null>({}as userInfoTypes) 
-  console.log(user,"session")
   const getUsers = async() => {
     try {
       const {data,error} = await supabase.from('profiles').select().eq(

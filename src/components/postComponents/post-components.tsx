@@ -8,7 +8,7 @@ export const PostHeader= ({userName,time,PostOptions}:PostHeaderPropsType) => {
 
     return(<div className="flex justify-between w-full">
     <div className="flex">
-    <div className="w-12 h-12 bg-indigo-500 rounded-lg aspect-square"></div>
+    <div className="w-12 h-12 bg-indigo-500 rounded-lg aspect-square object-cover"></div>
             <div className="px-4 flex-col justify-between">
                 <p className="text-base">{userName}</p>
                 <p className="text-xs">{time}{time && "ago"}</p>
@@ -45,8 +45,8 @@ type PostFooterProp = {
 
 export const PostFooter = ({likes,bookmarks,bookmarkPost,likePost}:PostFooterProp) => {
     return(<div className="flex space-x-2">
-    <div className="flex space-x-2 bg-[#F56F6F26] px-2 rounded-full ">
-    <div className="flex justify-center items-center" onClick={()=>likePost()}>
+    <div className="flex space-x-2 bg-[#F56F6F26] px-2 rounded-full cursor-pointer" onClick={()=>likePost()}>
+    <div className="flex justify-center items-center">
         <svg width="16" height="16" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M14.447 0.888894C12.7345 -0.466216 10.1877 -0.22247 8.61584 1.28353L8.00023 1.87258L7.38462 1.28353C5.8159 -0.22247 3.26595 -0.466216 1.55348 0.888894C-0.408984 2.44422 -0.512107 5.23569 1.24411 6.9216L7.29087 12.7193C7.68149 13.0936 8.31585 13.0936 8.70647 12.7193L14.7532 6.9216C16.5126 5.23569 16.4094 2.44422 14.447 0.888894V0.888894Z" fill="#F56F6F"/>
         </svg>
