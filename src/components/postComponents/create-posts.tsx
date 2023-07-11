@@ -10,7 +10,7 @@ const CreatePost = ({ session }: { session: Session | null }) => {
   const [postData,setPostData] = useState<string>("")
   type userInfoTypes = {full_name:string}
   const [userInfo,setUserInfo] = useState< userInfoTypes| null>({}as userInfoTypes) 
-  console.log(user)
+  console.log(user,"session")
   const getUsers = async() => {
     try {
       const {data,error} = await supabase.from('profiles').select().eq(
@@ -32,7 +32,7 @@ useEffect(()=>{getUsers()},[])
 
         const {data,error} = await supabase.from('posts').insert({
           user_id : user?.id ,
-          postInfo:postData,
+          post_info:postData,
           imagelink:imageName ? imageName : ""
         })
         console.log(data)

@@ -11,7 +11,7 @@ const SignUp = () => {
     })
     
     const signUp = () => {
-        
+
         console.log(location.origin)
 
         const supabase = createClientComponentClient()
@@ -22,7 +22,7 @@ const SignUp = () => {
                 emailRedirectTo: `${location.origin}/auth/callback`,
               },
         })
-        // router.refresh()
+        router.refresh()
     }
     
     const updateLoginState  = (e:React.ChangeEvent<HTMLInputElement>) => {
