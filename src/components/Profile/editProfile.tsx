@@ -6,6 +6,7 @@ const EditProfile = ({ session }: { session: Session | null }) => {
 
     const supabase = createClientComponentClient()
     const  user = session?.user
+    console.log(user,"editSession")
 
     const [userInfo,setUserInfo] = useState({
         username:"",
@@ -28,7 +29,6 @@ const EditProfile = ({ session }: { session: Session | null }) => {
             if(error) throw error
         } catch (error) {
             console.log(error)
-            alert(error)
         }
     }
     
