@@ -11,6 +11,7 @@ const SignUp = () => {
     })
     
     const signUp = () => {
+        
         console.log(location.origin)
 
         const supabase = createClientComponentClient()
