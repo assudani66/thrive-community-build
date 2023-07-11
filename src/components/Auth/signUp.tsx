@@ -1,8 +1,7 @@
 "use client"
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
-
+import React, { useState } from 'react'
 
 const SignUp = () => {
     const router = useRouter()
@@ -12,6 +11,7 @@ const SignUp = () => {
     })
     
     const signUp = () => {
+        console.log(location.origin)
 
         const supabase = createClientComponentClient()
         supabase.auth.signUp({
