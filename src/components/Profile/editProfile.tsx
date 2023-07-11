@@ -10,7 +10,8 @@ const EditProfile = ({ session }: { session: Session | null }) => {
     const [userInfo,setUserInfo] = useState({
         username:"",
         full_name:"",
-        website:""
+        website:"",
+        description:""
     })
 
     const getUserInfo = async() => {
@@ -44,6 +45,8 @@ const EditProfile = ({ session }: { session: Session | null }) => {
                 full_name : userInfo.full_name,
                 username:userInfo.username,
                 website:userInfo.website,
+                description:userInfo.description,
+                likedposts:"90abd3ad-9b42-42d5-a30e-a500473d4327",
                 updated_at: new Date().toISOString()
             }
             )
@@ -61,6 +64,7 @@ const EditProfile = ({ session }: { session: Session | null }) => {
         <input className='w-full h-12 rounded-xl px-5 border border-neutral-200' placeholder='username' name='username' onChange={e=>updateLoginState(e)}  value={userInfo?.username} />
         <input className='w-full h-12 rounded-xl px-5 border border-neutral-200' placeholder='full_name' name='full_name' onChange={e=>updateLoginState(e)}  value={userInfo?.full_name} />
         <input className='w-full h-12 rounded-xl px-5 border border-neutral-200' placeholder='website' name='website' onChange={e=>updateLoginState(e)}  value={userInfo?.website} />
+        <input className='w-full h-12 rounded-xl px-5 border border-neutral-200' placeholder='description' name='description' onChange={e=>updateLoginState(e)}  value={userInfo?.description} />
         
         <button className='mainbutton w-full rounded-lg' onClick={()=>addInfo()} >Update</button>
     </div>

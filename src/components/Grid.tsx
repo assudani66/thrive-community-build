@@ -23,7 +23,7 @@ const ResponsiveGrid = () => {
       console.error(error)
     }
   }
-  console.log(postList)
+  
   useEffect(()=>{getAllPosts()},[])
   return (
     <div className='flex items-center justify-center'>
@@ -36,16 +36,12 @@ const ResponsiveGrid = () => {
         <div className='w-full pl-20 h-screen hidden md:block'>
           <DesktopNavBar/>
         </div>
-
         <div className='flex-col w-80 col-start-2 space-y-4 justify-start items-start'>
           <div>
             header
           </div>
-          
-          {/* <div className='hidden md:block pt-4'>
-            <CreatePost/>
+          <div className='hidden md:block pt-4'>
             </div>
-          <PostList/> */}
           <div className='bg-indigo-500 h-fit flex justify-between rounded-lg text-white items-center'>
             <div className='flex items-center h-full px-7 py-2 bg-indigo-700 rounded-lg border-b-4 border-indigo-400 font-semibold '>
             <div className='flex-col justify-center text-center'>
