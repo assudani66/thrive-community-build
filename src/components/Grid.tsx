@@ -8,12 +8,15 @@ import Tags from './tags/tags'
 import SearchInput from './search_input'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import PostList from './postComponents/postList'
+import Logout from './Auth/logout'
 
 const ResponsiveGrid = () => {
 
   const [postList,setPostList] = useState<any[] | null>([])
   const supabase = createClientComponentClient()
-  
+
+  console.log(supabase)
+
   const getAllPosts = async() => {
     try{
       const {data,error} = await supabase.from("posts").select()
@@ -25,10 +28,14 @@ const ResponsiveGrid = () => {
   }
   
   useEffect(()=>{getAllPosts()},[])
+
+  
+
   return (
     <div className='flex items-center justify-center'>
       <div className='flex-col'>
       {/* <div className='hidden md:block'>Desktop top bar sticky</div> */}
+      <Logout/>
       <div className="
       grid grid-cols-1 max-w-full min-w-full md:gap-4
       md:grid-cols-3 md:max-w-5xl
@@ -40,29 +47,7 @@ const ResponsiveGrid = () => {
           <div>
             header
           </div>
-          <div className='hidden md:block pt-4'>
-            </div>
-          <div className='bg-indigo-500 h-fit flex justify-between rounded-lg text-white items-center'>
-            <div className='flex items-center h-full px-7 py-2 bg-indigo-700 rounded-lg border-b-4 border-indigo-400 font-semibold '>
-            <div className='flex-col justify-center text-center'>
-            <p>52</p>
-            <p className='m-0 p-0'>Posts</p>
-            </div>
-            </div>
-            <div className='flex items-center h-full px-7'>
-            <div className='flex-col justify-center text-center'>
-            <p>52</p>
-            <p className='m-0 p-0'>Following</p>
-            </div>
-            </div>
-            <div className='flex items-center h-full px-7'>
-            <div className='flex-col justify-center text-center'>
-            <p>52</p>
-            <p className='m-0 p-0'>Follower</p>
-            </div>
-            </div>
-            
-          </div>
+
 
           <PostList listOfPost={postList}/>
 

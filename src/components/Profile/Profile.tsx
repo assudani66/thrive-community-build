@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 const Profile = ({ session }: { session: Session | null }) => {
   const user = session?.user
   const supabase = createClientComponentClient()
+
   const [userInfo,setUserInfo] = useState({
     name:"",
     username:"",
@@ -15,6 +16,7 @@ const Profile = ({ session }: { session: Session | null }) => {
   const getUserInfo = async() => {
     try {
         const {data,error} = await supabase.from('profiles').select(`full_name, username, website, avatar_url`).eq('id',user?.id).single()
+        console.log(data)
         setUserInfo(
           {...userInfo,
           username:data?.username,
@@ -49,6 +51,29 @@ useEffect(()=>{getUserInfo()},[])
       ;dfsfsdfsdfsdflkljlk;jl;jpoijiojlkjlkjoisdf
     </p>
     </div>
+    <div className='hidden md:block pt-4'>
+          </div>
+          <div className='bg-indigo-500 h-fit flex justify-between rounded-lg text-white items-center'>
+            <div className='flex items-center h-full px-7 py-2 bg-indigo-700 rounded-lg border-b-4 border-indigo-400 font-semibold '>
+            <div className='flex-col justify-center text-center'>
+            <p>52</p>
+            <p className='m-0 p-0'>Posts</p>
+            </div>
+            </div>
+            <div className='flex items-center h-full px-7'>
+            <div className='flex-col justify-center text-center'>
+            <p>52</p>
+            <p className='m-0 p-0'>Following</p>
+            </div>
+            </div>
+            <div className='flex items-center h-full px-7'>
+              <div className='flex-col justify-center text-center'>
+                <p>52</p>
+                <p className='m-0 p-0'>Follower</p>
+              </div>
+            </div>
+            
+          </div>
   </div>
   )
 }
