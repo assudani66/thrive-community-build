@@ -29,8 +29,6 @@ const ResponsiveGrid = () => {
   
   useEffect(()=>{getAllPosts()},[])
 
-  
-
   return (
     <div className='flex items-center justify-center'>
       <div className='flex-col'>
