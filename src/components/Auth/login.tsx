@@ -42,7 +42,7 @@ const Login = () => {
             </div>
         <button className='bg-gray-300 py-2 w-full rounded-lg' onClick={()=>setLoginInfo({
             email:"thriverbuilder@yopmail.com",
-            password:"thirver123"
+            password:"Thriver@123"
         })} >Guest Credentials</button>
         <button className='mainbutton w-full rounded-lg' onClick={()=>signIn()} >Sign in</button>
         
