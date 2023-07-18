@@ -1,3 +1,5 @@
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+
 type PostHeaderPropsType = {
     userName:string
     time?:string
@@ -44,6 +46,22 @@ type PostFooterProp = {
 }
 
 export const PostFooter = ({likes,bookmarks,bookmarkPost,likePost}:PostFooterProp) => {
+
+    // const supabase = createClientComponentClient()
+    
+    // const handleLike = async() => {
+    //     try {    
+    //     const { data, error } = await supabase
+    //     .rpc('add_like', {
+    //       post_id, 
+    //       selected_user
+    //     })
+
+    //     } catch (error) {
+            
+    //     }
+    // }
+
     return(<div className="flex space-x-2">
     <div className="flex space-x-2 bg-[#F56F6F26] px-2 rounded-full cursor-pointer" onClick={()=>likePost()}>
     <div className="flex justify-center items-center">

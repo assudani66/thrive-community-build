@@ -1,3 +1,5 @@
+"use client"
+
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { PostFooter, PostHeader } from "./post-components"
 import { useEffect, useState } from "react";
@@ -12,20 +14,24 @@ export type Post={
 type PostProps = {
     postinfo:any
     comments : boolean
+    session:any
 }
 
-export const Post = ({comments,postinfo}:PostProps) => {
+export const Post = ({comments,postinfo,session}:PostProps) => {
 
     const [imageUrl,setImageUrl] = useState("")
-
+    // console.log(postinfo)
+    
     const supabase = createClientComponentClient()
-
-
     const likePost = async () => {
+
+        const {data} = await supabase.auth.getSession()
+
+        console.log(data.session,"sessionInfo")
         try {
-            const {data} =  await supabase.rpc("add_like",{post_id:'1842e6de-33b8-4cc9-a30a-d517e35d2a8e',selected_user:'132be31f-f562-44c3-a068-e0f4742a947a'})
+            const {data,error} =  await supabase.rpc("add_like",{post_id:postinfo?.id,selected_user:'132be31f-f562-44c3-a068-e0f4742a947a'})
         } catch (error) {
-            
+            console.log(error)
         }
     }
 
