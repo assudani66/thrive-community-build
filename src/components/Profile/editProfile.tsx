@@ -38,6 +38,40 @@ const EditProfile = ({ session }: { session: Session | null }) => {
         
         setUserInfo({...userInfo,[e.target.name] :e.target.value})
     }
+
+    const uploadPost = async () => {
+        try{
+         const imageName =  await uploadImage()
+         console.log( imageName,"path of image uploaded")
+    
+            const {data,error} = await supabase.from('posts').insert({
+              user_id : user?.id ,
+              post_info:postData,
+              imagelink:imageName ? imageName : ""
+            })
+     
+        }catch(error){
+          console.error(error)
+        }
+      }
+    
+      const uploadImage = async() => {
+    
+        const imageName = `${user?.id}_${new Date().toISOString()}`
+    
+        try{
+          if(uploadedImage.length >= 1  ){
+            console.log("this should run")
+            const {data,error} = await supabase.storage.from('public_posts').upload(imageName,uploadedImage[0])
+            console.log(data)
+            return `${data?.path}`
+          }
+        }catch(error){
+          console.log(error)
+        }
+        return ""
+      }
+    
     const addInfo = async() => {
         try{
             let{error} = await supabase.from('profiles').upsert({
