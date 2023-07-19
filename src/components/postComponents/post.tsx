@@ -20,30 +20,14 @@ export const Post = ({comments,postinfo,session}:PostProps) => {
     
     const [imageUrl,setImageUrl] = useState("")
     const [userDetails,setUserDetais] = useState<any|null>()
+    const [postDetails,setPostDetails] = useState<any>({
+        likes:0,
+        dislike:0
+    })
     // console.log(postinfo)
     
     const supabase = createClientComponentClient()
     console.log(postinfo)
-
-    // post funcationality
-
-    const likePost = async () => {
-        try {   
-            const {data,error} =  await supabase.rpc("add_like",{post_id:postinfo?.id,selected_user:session?.data?.session?.user?.id})
-            if(error) throw error
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    
-    const bookmarkPost = async () => {
-        try {
-            const {data,error} =  await supabase.rpc("bookmark_post",{post_id:postinfo?.id,selected_user:session?.data?.session?.user?.id})
-            if(error) throw error
-        } catch (error) {
-            console.log(error)
-        }
-    }
 
 // postDetails
 
@@ -67,12 +51,21 @@ export const Post = ({comments,postinfo,session}:PostProps) => {
             const {data,error} = await supabase.from('profiles').select().eq( 'id', postinfo.user_id).single()
             setUserDetais(data)
         } catch (error) {
-            
+            console.log(error)
+        }
+    }
+    const updatedPostInfo= async()=> {
+        try{
+            const {data,error} = await supabase.from('posts').select().eq('id',postinfo?.id)
+            setPostDetails(data)
+        }catch(error){
+            console.log(error)
         }
     }
     
     console.log(userDetails)
     useEffect(()=>{postImage(),userPostInfo()},[])
+    useEffect(()=>{updatedPostInfo},[])
 
     const PostBody = () =>{
         return(<div>
@@ -85,7 +78,7 @@ export const Post = ({comments,postinfo,session}:PostProps) => {
     return<div className="flex-col space-y-5 w-full px-8 py-4">
         <PostHeader PostOptions="POST" userName={userDetails?.username}/>
         <PostBody/>
-        <PostFooter likes={postinfo?.likes?.length} bookmarks={postinfo?.bookmarks?.length} likePost={()=>likePost()} bookmarkPost={()=>bookmarkPost()}/>
+        <PostFooter session={session} supabase={supabase} postInfo={postinfo}/>
         {comments && <div>
         </div>}
     </div>
