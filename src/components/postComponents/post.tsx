@@ -4,7 +4,6 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { PostFooter, PostHeader } from "./post-components"
 import { useEffect, useState } from "react";
 
-
 export type Post={
     id:string;
     created_at : any;
@@ -18,22 +17,35 @@ type PostProps = {
 }
 
 export const Post = ({comments,postinfo,session}:PostProps) => {
-
+    
     const [imageUrl,setImageUrl] = useState("")
+    const [userDetails,setUserDetais] = useState<any|null>()
     // console.log(postinfo)
     
     const supabase = createClientComponentClient()
+    console.log(postinfo)
+
+    // post funcationality
+
     const likePost = async () => {
-
-        const {data} = await supabase.auth.getSession()
-
-        console.log(data.session,"sessionInfo")
-        try {
-            const {data,error} =  await supabase.rpc("add_like",{post_id:postinfo?.id,selected_user:'132be31f-f562-44c3-a068-e0f4742a947a'})
+        try {   
+            const {data,error} =  await supabase.rpc("add_like",{post_id:postinfo?.id,selected_user:session?.data?.session?.user?.id})
+            if(error) throw error
         } catch (error) {
             console.log(error)
         }
     }
+    
+    const bookmarkPost = async () => {
+        try {
+            const {data,error} =  await supabase.rpc("bookmark_post",{post_id:postinfo?.id,selected_user:session?.data?.session?.user?.id})
+            if(error) throw error
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+// postDetails
 
     const postImage = async() => {
         try {
@@ -49,7 +61,18 @@ export const Post = ({comments,postinfo,session}:PostProps) => {
         }
     }
 
-    useEffect(()=>{postImage()},[])
+    const userPostInfo = async() => {
+
+        try {
+            const {data,error} = await supabase.from('profiles').select().eq( 'id', postinfo.user_id).single()
+            setUserDetais(data)
+        } catch (error) {
+            
+        }
+    }
+    
+    console.log(userDetails)
+    useEffect(()=>{postImage(),userPostInfo()},[])
 
     const PostBody = () =>{
         return(<div>
@@ -60,9 +83,9 @@ export const Post = ({comments,postinfo,session}:PostProps) => {
     }
 
     return<div className="flex-col space-y-5 w-full px-8 py-4">
-        <PostHeader PostOptions="POST" userName=""/>
+        <PostHeader PostOptions="POST" userName={userDetails?.username}/>
         <PostBody/>
-        <PostFooter likes={1} bookmarks={2} likePost={()=>likePost()} bookmarkPost={()=>console.log("bookmark")}/>
+        <PostFooter likes={postinfo?.likes?.length} bookmarks={postinfo?.bookmarks?.length} likePost={()=>likePost()} bookmarkPost={()=>bookmarkPost()}/>
         {comments && <div>
         </div>}
     </div>

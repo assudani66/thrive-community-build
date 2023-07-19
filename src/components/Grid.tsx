@@ -13,9 +13,17 @@ import Logout from './Auth/logout'
 const ResponsiveGrid = () => {
 
   const [postList,setPostList] = useState<any[] | null>([])
+  const [session,setSession] = useState<any | null>()
   const supabase = createClientComponentClient()
 
-  console.log(supabase)
+  const getCurrentUserSession = async()=>{
+    try {
+      const session  = await supabase.auth.getSession()
+      setSession(session)      
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const getAllPosts = async() => {
     try{
@@ -27,7 +35,7 @@ const ResponsiveGrid = () => {
     }
   }
   
-  useEffect(()=>{getAllPosts()},[])
+  useEffect(()=>{getAllPosts(), getCurrentUserSession()},[])
 
   return (
     <div className='flex items-center justify-center'>
@@ -45,9 +53,7 @@ const ResponsiveGrid = () => {
           <div>
             header
           </div>
-
-
-          <PostList listOfPost={postList}/>
+          <PostList listOfPost={postList} session={session} />
 
         </div>
         <div className='p-4 w-full h-screen hidden md:block '>

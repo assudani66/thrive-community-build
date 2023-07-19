@@ -34,8 +34,7 @@ useEffect(()=>{getUsers()},[])
           post_info:postData,
           imagelink:imageName ? imageName : ""
         })
-        console.log(data)
-  console.log("this is working")
+ 
     }catch(error){
       console.error(error)
     }

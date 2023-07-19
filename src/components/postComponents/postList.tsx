@@ -1,10 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Post } from './post'
 
-const PostList = ({listOfPost}:{listOfPost:any[]|null}) => {
-
-  const session = "user session"
-
+const PostList = ({listOfPost,session}:{listOfPost:any[]|null;session:any}) => {
   return (
     <div>
       {listOfPost?.map((post)=><div className='flex-col'>

@@ -9,5 +9,11 @@ export default async function Account() {
     data: { session },
   } = await supabase.auth.getSession()
 
-  return <EditProfile session={session} />
+  return <>
+  <div className='flex items-center justify-center '>
+      <div className='flex-col max-w-xs'>
+        <div className='flex-col max-w-xs col-start-2 space-y-4 justify-start items-start'>
+    <EditProfile session={session} />
+  </div></div></div>
+  </>
 }

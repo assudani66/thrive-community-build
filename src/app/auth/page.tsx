@@ -11,7 +11,7 @@ const AuthPage = () => {
     <>
      <div className='flex items-center justify-center'>
       <div className='flex-col'>
-        <div className='flex-col w-80 col-start-2 space-y-4 justify-start items-start'>
+        <div className='flex-col max-w-xs col-start-2 space-y-4 justify-start items-start'>
           {!newUser && <Login/>}
           { newUser && <SignUp/>}
           <div>

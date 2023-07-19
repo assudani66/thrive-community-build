@@ -47,21 +47,6 @@ type PostFooterProp = {
 
 export const PostFooter = ({likes,bookmarks,bookmarkPost,likePost}:PostFooterProp) => {
 
-    // const supabase = createClientComponentClient()
-    
-    // const handleLike = async() => {
-    //     try {    
-    //     const { data, error } = await supabase
-    //     .rpc('add_like', {
-    //       post_id, 
-    //       selected_user
-    //     })
-
-    //     } catch (error) {
-            
-    //     }
-    // }
-
     return(<div className="flex space-x-2">
     <div className="flex space-x-2 bg-[#F56F6F26] px-2 rounded-full cursor-pointer" onClick={()=>likePost()}>
     <div className="flex justify-center items-center">
@@ -72,12 +57,12 @@ export const PostFooter = ({likes,bookmarks,bookmarkPost,likePost}:PostFooterPro
     <p>{likes}</p>
     </div>
     <div className="flex space-x-2 bg-[#704FFE26] px-2 rounded-full">
-    <div className="flex justify-center items-center" onClick={()=>bookmarkPost()}>
+    <div className="flex justify-center items-center cursor-pointer" onClick={()=>bookmarkPost()}>
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M15.75 8.3235V12.0682C15.75 14.3902 15.75 15.552 15.1995 16.059C14.937 16.3013 14.6055 16.4535 14.2523 16.494C13.512 16.5788 12.6473 15.8137 10.9185 14.2845C10.1535 13.6087 9.77175 13.2705 9.33 13.182C9.11219 13.1381 8.88781 13.1381 8.67 13.182C8.2275 13.2705 7.84575 13.6087 7.0815 14.2845C5.35275 15.8137 4.488 16.5787 3.74775 16.4932C3.39393 16.4527 3.06218 16.3006 2.8005 16.059C2.25 15.552 2.25 14.391 2.25 12.0682V8.32275C2.25 5.1075 2.25 3.49875 3.2385 2.49975C4.227 1.5 5.8185 1.5 9 1.5C12.1823 1.5 13.773 1.5 14.7615 2.499C15.75 3.49875 15.75 5.1075 15.75 8.3235ZM6.1875 4.5C6.1875 4.35082 6.24676 4.20774 6.35225 4.10225C6.45774 3.99676 6.60082 3.9375 6.75 3.9375H11.25C11.3992 3.9375 11.5423 3.99676 11.6477 4.10225C11.7532 4.20774 11.8125 4.35082 11.8125 4.5C11.8125 4.64918 11.7532 4.79226 11.6477 4.89775C11.5423 5.00324 11.3992 5.0625 11.25 5.0625H6.75C6.60082 5.0625 6.45774 5.00324 6.35225 4.89775C6.24676 4.79226 6.1875 4.64918 6.1875 4.5Z" fill="#704FFE"/>
         </svg>
     </div>
-    <p>{bookmarks}</p>
+    <p className="cursor-pointer">{bookmarks}</p>
     </div>
     </div>)
 }
