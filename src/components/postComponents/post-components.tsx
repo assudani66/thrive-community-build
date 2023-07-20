@@ -12,26 +12,41 @@ type PostHeaderPropsType = {
 export const PostHeader = ({ userInfo,session,supabase, userName, time, PostOptions }: PostHeaderPropsType) => {
     
     const [currentUserDetails,setCurrentUserDetails] = useState<any>()
+    const [followed,setFollowed] = useState<boolean>(false)
 
     const getCurrentUserDetails = async() => {
         try{
             const {data,error} = await supabase.from('profiles').select().eq('id',session?.data?.session?.user?.id).single()
             setCurrentUserDetails(data)
+
+            setFollowed(data?.following.includes(userInfo?.id))
         }catch(error){
             console.log(error)
         }
     }
-
-    const followed = !currentUserDetails?.following.find((follower:string)=>follower === userInfo?.id)
+    
+    const currentUserId = session?.data?.session?.user?.id
     useEffect(()=>{getCurrentUserDetails()},[])
     const followUser = async() => {
         try{
-            const {data,error} = await supabase.rpc('follow_people',{
-                follower_id:session?.data?.session?.user?.id,
-                following_id:userInfo?.id
-            })
-            console.log(data)
-            if(error) throw error
+            if(followed){
+                const {data,error} = await supabase.rpc('follow_people',{
+                    follower_id:currentUserId,
+                    following_id:userInfo?.id
+                })
+                console.log(data)
+                setCurrentUserDetails({...currentUserDetails,followers:{...currentUserDetails.followers,currentUserId}})
+                setFollowed(false)
+                if(error) throw error
+            }else{
+                const {data,error} = await supabase.rpc('remove_follower',{
+                    follower_id:currentUserId,
+                    following_id:userInfo?.id
+                })
+                setCurrentUserDetails({...currentUserDetails})
+                setFollowed(true)
+                if(error) throw error
+            }
         }catch(error){
             console.log(error)
         }
@@ -53,11 +68,7 @@ export const PostHeader = ({ userInfo,session,supabase, userName, time, PostOpti
                     : PostOptions === "CREATE_POST" ? <></>
                         : PostOptions === "FOLLOW_REQUEST" ?
                             <div className="flex-col items-center" >
-                                 <button className='mainbutton rounded-[1rem] h-12 w-12 text-[10] flex items-center' onClick={()=>followUser()}>
-                                    <svg width="70" height="70" viewBox="0 0 26 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M13 2V23" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-                                        <path d="M2.5 12.5H23.5" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
+                                 <button className='mainbutton font-bold text-lg rounded-[1rem] flex items-center' onClick={()=>followUser()} > {followed ? "+" : "-"}
                                 </button>
                             </div>
                             : <></>

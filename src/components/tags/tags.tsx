@@ -30,7 +30,7 @@ const Tags = ({supabase,session}:any) => {
             <p className='px-5 py-3 bg-[#FFF1EB] rounded-2xl text-black text-lg'>fdsfsdf</p>
             <h2 className='font-medium text-2xl '>Who to follow</h2>
             {
-              followRecomendation.map(
+              followRecomendation.filter((user:any)=>user.id !== session?.data?.session?.user?.id).map(
                 (user:any)=><PostHeader session={session} supabase={supabase} userInfo={user} userName={user?.username} PostOptions='FOLLOW_REQUEST'/>
               )
             }

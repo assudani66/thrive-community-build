@@ -29,6 +29,7 @@ const ResponsiveGrid = () => {
     try{
       const {data,error} = await supabase.from("posts").select().order('created_at',{ascending:false})
       setPostList(data)
+      if(error) throw error
     }
     catch(error){
       console.error(error)
