@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { PostHeader } from '../postComponents/post-components'
+import Topics_desktop from './Topics_desktop'
 
 const Tags = ({supabase,session}:any) => {
   const [followRecomendation,setFollowReconmedation] = useState([])
 
   const getUnfollowedProfiles = async() => {
     try{
-      const {data,error} = await supabase.from('profiles').select()
+      const {data} = await supabase.from('profiles').select()
       setFollowReconmedation(data)
       console.log(data)
     }catch(error){
@@ -22,12 +23,8 @@ const Tags = ({supabase,session}:any) => {
         justify-items-end
         space-y-4
         '>
-            <div className='px-5 flex-col
-            justify-items-end
-            space-y-4'>
-            <h2 className='font-medium text-2xl '>Topics</h2>
-            <p className='px-5 py-3 bg-[#FE9063] rounded-2xl text-white text-lg'>fdsfsdf</p>
-            <p className='px-5 py-3 bg-[#FFF1EB] rounded-2xl text-black text-lg'>fdsfsdf</p>
+            <div className='px-5 flex-col justify-items-end space-y-4'>
+              <Topics_desktop/>
             <h2 className='font-medium text-2xl '>Who to follow</h2>
             {
               followRecomendation.filter((user:any)=>user.id !== session?.data?.session?.user?.id).map(

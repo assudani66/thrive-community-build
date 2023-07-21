@@ -13,6 +13,7 @@ export const PostHeader = ({ userInfo,session,supabase, userName, time, PostOpti
     
     const [currentUserDetails,setCurrentUserDetails] = useState<any>()
     const [followed,setFollowed] = useState<boolean>(false)
+    const [openModal,setOpenModal] = useState(false) 
 
     const getCurrentUserDetails = async() => {
         try{
@@ -26,7 +27,9 @@ export const PostHeader = ({ userInfo,session,supabase, userName, time, PostOpti
     }
     
     const currentUserId = session?.data?.session?.user?.id
+
     useEffect(()=>{getCurrentUserDetails()},[])
+
     const followUser = async() => {
         try{
             if(followed){
@@ -54,9 +57,10 @@ export const PostHeader = ({ userInfo,session,supabase, userName, time, PostOpti
         }
     }
 
+
     return (<div className="flex justify-between w-full">
         <div className="flex">
-            <div className="w-12 h-12 bg-indigo-500 rounded-lg aspect-square object-cover"></div>
+            <img className="w-12 h-12 bg-indigo-500 rounded-lg aspect-square object-cover" src={userInfo?.avatar_url}></img>
             <div className="px-4 flex-col justify-between">
                 <p className="text-base">{userName}</p>
                 <p className="text-xs">{time}{time && "ago"}</p>
@@ -64,9 +68,32 @@ export const PostHeader = ({ userInfo,session,supabase, userName, time, PostOpti
         </div>
         <div>
             {
-                PostOptions === "POST" ? <svg onClick={() => console.log("this works")} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
+                PostOptions === "POST" ? <div><svg onClick={() => console.log("this works")} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
                 </svg>
+                <button id="dropdownMenuIconHorizontalButton" data-dropdown-toggle="dropdownDotsHorizontal" className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button"> 
+                <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+                    <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/>
+                </svg>
+                </button>
+                <div id="dropdownDotsHorizontal" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconHorizontalButton">
+                    <li>
+                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                    </li>
+                    <li>
+                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+                    </li>
+                    </ul>
+                    <div className="py-2">
+                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Separated link</a>
+                    </div>
+                </div>
+                </div>
+                
                     : PostOptions === "CREATE_POST" ? <></>
                         : PostOptions === "FOLLOW_REQUEST" ?
                             <div className="flex-col items-center" >

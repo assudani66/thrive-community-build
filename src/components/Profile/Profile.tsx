@@ -10,6 +10,7 @@ const Profile = ({ session }: { session: Session | null }) => {
     name:"",
     username:"",
     full_name:"",
+    avatar_url:"",
     website:""
 })
 
@@ -21,6 +22,7 @@ const Profile = ({ session }: { session: Session | null }) => {
           {...userInfo,
           username:data?.username,
           full_name:data?.full_name,
+          avatar_url:data?.avatar_url,
           website:data?.website
           })
         if(error) throw error
@@ -36,7 +38,7 @@ useEffect(()=>{getUserInfo()},[])
     <div className='p-0'>
     <div className='w-full  bg-indigo-500 h-40'></div>
     <div className='px-5 relative bottom-10'>
-      <div className='w-20 h-20 bg-red-600 rounded-xl wrap'></div>
+      <img className='w-20 h-20 rounded-xl wrap' src={userInfo.avatar_url}></img>
     <div className='flex justify-between'>
     <div className='flex-col'>
     <p className='font-medium'>{userInfo.full_name} • {}</p>

@@ -76,7 +76,7 @@ export const Post = ({comments,postinfo,session}:PostProps) => {
     }
 
     return<div className="flex-col space-y-5 w-full px-8 py-4">
-        <PostHeader supabase={supabase} session={session} PostOptions="POST" userName={userDetails?.username}/>
+        <PostHeader userInfo={userDetails} supabase={supabase} session={session} PostOptions="POST" userName={userDetails?.username}/>
         <PostBody/>
         <PostFooter session={session} supabase={supabase} postInfo={postinfo}/>
         {comments && <div>

@@ -6,11 +6,11 @@
 .mainbutton{
   @apply px-5 py-2 bg-[#FE9063] shadow-[0px_9px_10px_0px_rgba(254,144,99,0.35)] text-white
 }
+
 .wrap {
   text-align: center;
-  border: 10px double rgb(250, 9, 166);
+  border: 10px double rgb(53, 2, 35);
   background-clip: padding-box;
-  padding: 25px;
 }
 .inner {
   background: rgba(255, 255, 255, .5);

@@ -61,10 +61,11 @@ const EditProfile = ({ session }: { session: any | null }) => {
         try{
           if(uploadedImage.length >= 1  ){
             const {data,error} = await supabase.storage.from('avatars').upload(imageName,uploadedImage[0])
+            console.log(data)
             const uploadedUrl = await supabase
             .storage
             .from('avatars')
-            .getPublicUrl(`folder/${data}.png`)
+            .getPublicUrl(data?.path as string)
             console.log(uploadedUrl.data)
             return uploadedUrl.data.publicUrl
           }
