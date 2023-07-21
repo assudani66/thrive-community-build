@@ -18,8 +18,8 @@ export const PostHeader = ({ userInfo,session,supabase, userName, time, PostOpti
         try{
             const {data,error} = await supabase.from('profiles').select().eq('id',session?.data?.session?.user?.id).single()
             setCurrentUserDetails(data)
-
-            setFollowed(data?.following.includes(userInfo?.id))
+            console.log(followed)
+            setFollowed(!data?.following.includes(userInfo?.id))
         }catch(error){
             console.log(error)
         }
@@ -36,7 +36,7 @@ export const PostHeader = ({ userInfo,session,supabase, userName, time, PostOpti
                 })
                 console.log(data)
                 setCurrentUserDetails({...currentUserDetails,followers:{...currentUserDetails.followers,currentUserId}})
-                setFollowed(false)
+                setFollowed(!followed)
                 if(error) throw error
             }else{
                 const {data,error} = await supabase.rpc('remove_follower',{
@@ -44,7 +44,9 @@ export const PostHeader = ({ userInfo,session,supabase, userName, time, PostOpti
                     following_id:userInfo?.id
                 })
                 setCurrentUserDetails({...currentUserDetails})
-                setFollowed(true)
+                console.log(currentUserDetails)
+                console.log(userInfo.id)
+                setFollowed(!followed)
                 if(error) throw error
             }
         }catch(error){
