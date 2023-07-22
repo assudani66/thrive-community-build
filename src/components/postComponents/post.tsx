@@ -68,7 +68,7 @@ export const Post = ({setListPost,postList, comments,postinfo,session}:PostProps
     return<div className="flex-col space-y-5 w-full px-8 py-4">
         <PostHeader deletePost = {()=>deletePost()} userInfo={userDetails} postInfo={postinfo} supabase={supabase} session={session} PostOptions="POST" userName={userDetails?.username}/>
         <PostBody/>
-        <PostFooter session={session} supabase={supabase} postInfo={postinfo}/>
+        <PostFooter supabase={supabase} postInfo={postinfo}/>
         {comments && <div>
         </div>}
     </div>

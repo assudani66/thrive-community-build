@@ -14,14 +14,13 @@ type PostHeaderPropsType = {
 
 export const PostHeader = ({ deletePost, userInfo,postInfo,session,supabase, userName, time, PostOptions }: PostHeaderPropsType) => {
     const router = useRouter()
-
-    // console.log("userInfo",userInfo,"session",session?.data?.session?.user?.id)
     const [currentUserDetails,setCurrentUserDetails] = useState<any>()
     const [followed,setFollowed] = useState<boolean>(false)
     const [openModal,setOpenModal] = useState(false) 
 
     const getCurrentUserDetails = async() => {
-        try{
+        try{ 
+            const session = await supabase.auth.getSession()
             const {data,error} = await supabase.from('profiles').select().eq('id',session?.data?.session?.user?.id).single()
             setCurrentUserDetails(data)
             setFollowed(!data?.following.includes(userInfo?.id))
@@ -30,29 +29,29 @@ export const PostHeader = ({ deletePost, userInfo,postInfo,session,supabase, use
         }
     }
     
-    const currentUserId = session?.data?.session?.user?.id
-
+    
+    
     useEffect(()=>{getCurrentUserDetails()},[])
-
+    
     const followUser = async() => {
         try{
             if(followed){
+                const session = await supabase.auth.getSession()
                 const {data,error} = await supabase.rpc('follow_people',{
-                    follower_id:currentUserId,
+                    follower_id:session?.data?.session?.user?.id,
                     following_id:userInfo?.id
                 })
-                console.log(data)
+                const currentUserId = session?.data?.session?.user?.id
                 setCurrentUserDetails({...currentUserDetails,followers:{...currentUserDetails.followers,currentUserId}})
                 setFollowed(!followed)
                 if(error) throw error
             }else{
+                const session = await supabase.auth.getSession()
                 const {data,error} = await supabase.rpc('remove_follower',{
-                    follower_id:currentUserId,
+                    follower_id:session?.data?.session?.user?.id,
                     following_id:userInfo?.id
                 })
                 setCurrentUserDetails({...currentUserDetails})
-                console.log(currentUserDetails)
-                console.log(userInfo?.id)
                 setFollowed(!followed)
                 if(error) throw error
             }
@@ -61,7 +60,7 @@ export const PostHeader = ({ deletePost, userInfo,postInfo,session,supabase, use
         }
     }
 
-    const isPostOwner = postInfo?.user_id == currentUserId
+    const isPostOwner = postInfo?.user_id == session?.data?.session?.user?.id
     return (<div className="flex justify-between w-full">
         <div className="flex">
             <img className="w-12 h-12 bg-indigo-500 rounded-lg aspect-square object-cover" src={userInfo?.avatar_url}></img>
@@ -94,8 +93,10 @@ export const PostHeader = ({ deletePost, userInfo,postInfo,session,supabase, use
                 
                     : PostOptions === "CREATE_POST" ? <></>
                         : PostOptions === "FOLLOW_REQUEST" ?
-                            <div className="flex-col items-center" >
-                                 <button className='mainbutton font-bold text-lg rounded-[1rem] flex items-center' onClick={()=>followUser()} > {followed ? "+" : "-"}
+                            <div className="flex-col items-center justify-center" >
+                                 <button className='mainbutton 
+                                 items-center
+                                 font-bold text-xs rounded-[1rem] flex items-center' onClick={()=>followUser()} > {followed ? "Follow" : "Unfollow"}
                                 </button>
                             </div>
                             : <></>
@@ -107,32 +108,48 @@ export const PostHeader = ({ deletePost, userInfo,postInfo,session,supabase, use
 
 type PostFooterProp = {
     postInfo: any;
-    session: any;
     supabase: any;
 }
 
-export const PostFooter = ({  postInfo, session, supabase }: PostFooterProp) => {
-
+export const PostFooter = ({  postInfo, supabase }: PostFooterProp) => {
     const [likes, setLikes] = useState(postInfo?.likes?.length)
     const [bookMarks, setBookMarks] = useState(postInfo?.bookmarks?.length)
-
-    const [interaction, setInteraction] = useState({
+    const [session,setSession] = useState<any>()
+    const [interaction, setInteraction] = useState(
+       { liked:true,
+        bookMarked:true,
+        alreadyBookmarked:false,
+        alreadyLiked:false}
+    )
+    const getCurrentUserSession = async() => {
+        const session = await supabase.auth.getSession()
+        setSession(session)
+    }
+    
+    useEffect(()=>{getCurrentUserSession()},[])
+    useEffect(()=>{
+        setInteraction({
         liked: Boolean(postInfo?.likes
             .find((like:string)=> like === session?.data?.session?.user?.id)),
+        alreadyLiked:Boolean(postInfo?.likes.includes(session?.data?.session?.user?.id)),
+        alreadyBookmarked:Boolean(postInfo?.bookmarks.includes(session?.data?.session?.user?.id)),
         bookMarked: Boolean(postInfo?.bookmarks
-            .find((bookMark:string)=> bookMark === session?.data?.session?.user?.id))
-    })
-
+                .find((bookMark:string)=> bookMark === session?.data?.session?.user?.id))
+            })
+    },[session])
     const likePost = async () => {
         try {
             if (interaction.liked) {
+                const session = await supabase.auth.getSession()
                 const { data, error } = await supabase.rpc("remove_user_from_likes", { post_id: postInfo?.id, selected_user: session?.data?.session?.user?.id })
-                setInteraction({ ...interaction, liked: !interaction.liked })
+                setInteraction({ ...interaction,alreadyLiked:!interaction.alreadyLiked,  liked: !interaction.liked })
                 setLikes(likes - 1)
                 if (error) throw error
             } else {
+                const session = await supabase.auth.getSession()
                 const { error } = await supabase.rpc("add_like", { post_id: postInfo?.id, selected_user: session?.data?.session?.user?.id })
-                setInteraction({ ...interaction, liked: !interaction.liked })
+                setInteraction({ ...interaction,
+                    alreadyLiked:!interaction.alreadyLiked, liked: !interaction.liked })
                 setLikes(likes + 1)
                 if (error) throw error
             }
@@ -144,13 +161,17 @@ export const PostFooter = ({  postInfo, session, supabase }: PostFooterProp) => 
     const bookmarkPost = async () => {
         try {
             if(interaction.bookMarked){
+                const session = await supabase.auth.getSession()
                 const { data, error } = await supabase.rpc("remove_user_from_bookmarks", { post_id: postInfo?.id, uuid_to_remove: session?.data?.session?.user?.id })
-                setInteraction({ ...interaction, bookMarked: !interaction.bookMarked })
+                setInteraction({ ...interaction,alreadyBookmarked:!interaction.alreadyBookmarked,  bookMarked: !interaction.bookMarked })
                 setBookMarks(bookMarks - 1)
                 if (error) throw error
             } else {
+                const session = await supabase.auth.getSession()
                 const { error } = await supabase.rpc("bookmark_post", { post_id: postInfo?.id, selected_user: session?.data?.session?.user?.id })
-                setInteraction({ ...interaction, bookMarked: !interaction.bookMarked })
+                setInteraction({ ...interaction,
+                alreadyBookmarked:!interaction.alreadyBookmarked, 
+                bookMarked: !interaction.bookMarked })
                 setBookMarks(bookMarks + 1)
                 if (error) throw error
             }
@@ -159,10 +180,9 @@ export const PostFooter = ({  postInfo, session, supabase }: PostFooterProp) => 
             console.log(error)
         }
     }
-
     return (<div className="flex space-x-2">
         <div 
-        className={`flex space-x-2 ${interaction.liked ? "bg-[#F56F6F26]" : "bg-[#ffffff26]"} px-2 rounded-full`}
+        className={`flex space-x-2 ${(interaction.liked || interaction.alreadyLiked)  ? "bg-[#F56F6F26]" : "bg-[#ffffff26]"} px-2 rounded-full`}
           onClick={() => likePost()}>
             <div className="flex justify-center items-center">
                 <svg width="16" height="16" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -171,7 +191,7 @@ export const PostFooter = ({  postInfo, session, supabase }: PostFooterProp) => 
             </div>
             <p>{likes>0 ? likes : ""}</p>
         </div>
-        <div className={`flex space-x-2 ${interaction.bookMarked ? "bg-[#704FFE26]" : "bg-[#ffffff26]"} px-2 rounded-full`} onClick={() => { bookmarkPost() }}>
+        <div className={`flex space-x-2 ${(interaction.bookMarked || interaction.alreadyBookmarked ) ? "bg-[#704FFE26]" : "bg-[#ffffff26]"} px-2 rounded-full`} onClick={() => { bookmarkPost() }}>
             <div className="flex justify-center items-center cursor-pointer" >
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M15.75 8.3235V12.0682C15.75 14.3902 15.75 15.552 15.1995 16.059C14.937 16.3013 14.6055 16.4535 14.2523 16.494C13.512 16.5788 12.6473 15.8137 10.9185 14.2845C10.1535 13.6087 9.77175 13.2705 9.33 13.182C9.11219 13.1381 8.88781 13.1381 8.67 13.182C8.2275 13.2705 7.84575 13.6087 7.0815 14.2845C5.35275 15.8137 4.488 16.5787 3.74775 16.4932C3.39393 16.4527 3.06218 16.3006 2.8005 16.059C2.25 15.552 2.25 14.391 2.25 12.0682V8.32275C2.25 5.1075 2.25 3.49875 3.2385 2.49975C4.227 1.5 5.8185 1.5 9 1.5C12.1823 1.5 13.773 1.5 14.7615 2.499C15.75 3.49875 15.75 5.1075 15.75 8.3235ZM6.1875 4.5C6.1875 4.35082 6.24676 4.20774 6.35225 4.10225C6.45774 3.99676 6.60082 3.9375 6.75 3.9375H11.25C11.3992 3.9375 11.5423 3.99676 11.6477 4.10225C11.7532 4.20774 11.8125 4.35082 11.8125 4.5C11.8125 4.64918 11.7532 4.79226 11.6477 4.89775C11.5423 5.00324 11.3992 5.0625 11.25 5.0625H6.75C6.60082 5.0625 6.45774 5.00324 6.35225 4.89775C6.24676 4.79226 6.1875 4.64918 6.1875 4.5Z" fill="#704FFE" />

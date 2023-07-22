@@ -3,7 +3,6 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import React, { useEffect } from 'react'
 import { cookies } from 'next/headers'
 import { Post } from '@/components/postComponents/post'
-import { useRouter } from 'next/navigation'
 
 const PostDetailPage = async({params}:{params:{id:string}}) => {
     const supabase = createServerComponentClient({ cookies })

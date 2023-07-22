@@ -1,3 +1,4 @@
+import ResponsiveGrid from '@/components/Grid'
 import Profile from '@/components/Profile/Profile'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
@@ -10,5 +11,5 @@ export default async function Account() {
     data: { session },
   } = await supabase.auth.getSession()
 
-  return <Profile session={session} />
+  return <ResponsiveGrid currentPage='PROFILE' />
 }

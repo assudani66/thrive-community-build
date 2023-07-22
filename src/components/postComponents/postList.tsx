@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Post } from './post'
 
 const PostList = ({setListofPost,listOfPost,session}:{setListofPost:any;listOfPost:any[]|null;session:any}) => {
-  
   return (
     <div>
       {listOfPost?.map((post)=><div className='flex-col'>
