@@ -27,7 +27,6 @@ const Profile = ({ session }: { session: Session | null }) => {
           })
         if(error) throw error
     } catch (error) {
-        // alert("error")
         console.error(error)
     }
 }

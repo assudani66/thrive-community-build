@@ -54,7 +54,7 @@ const ResponsiveGrid = () => {
           <div>
             header
           </div>
-          <PostList listOfPost={postList} session={session} />
+          <PostList setListofPost={setPostList} listOfPost={postList} session={session} />
 
         </div>
         <div className='p-4 w-full h-screen hidden md:block '>

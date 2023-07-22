@@ -1,16 +1,21 @@
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
 
 type PostHeaderPropsType = {
-    userInfo?:any
-    userName: string
-    time?: string
-    session?:any
-    supabase?:any
-    PostOptions: "FOLLOW_REQUEST" | "POST" | "CREATE_POST"
+    userInfo?: any;
+    deletePost?: any;
+    userName?: string;
+    postInfo?: any;
+    time?: string;
+    session?:any;
+    supabase?:any;
+    PostOptions: "FOLLOW_REQUEST" | "POST" | "CREATE_POST";
 }
 
-export const PostHeader = ({ userInfo,session,supabase, userName, time, PostOptions }: PostHeaderPropsType) => {
-    
+export const PostHeader = ({ deletePost, userInfo,postInfo,session,supabase, userName, time, PostOptions }: PostHeaderPropsType) => {
+    const router = useRouter()
+
+    // console.log("userInfo",userInfo,"session",session?.data?.session?.user?.id)
     const [currentUserDetails,setCurrentUserDetails] = useState<any>()
     const [followed,setFollowed] = useState<boolean>(false)
     const [openModal,setOpenModal] = useState(false) 
@@ -19,7 +24,6 @@ export const PostHeader = ({ userInfo,session,supabase, userName, time, PostOpti
         try{
             const {data,error} = await supabase.from('profiles').select().eq('id',session?.data?.session?.user?.id).single()
             setCurrentUserDetails(data)
-            console.log(followed)
             setFollowed(!data?.following.includes(userInfo?.id))
         }catch(error){
             console.log(error)
@@ -48,7 +52,7 @@ export const PostHeader = ({ userInfo,session,supabase, userName, time, PostOpti
                 })
                 setCurrentUserDetails({...currentUserDetails})
                 console.log(currentUserDetails)
-                console.log(userInfo.id)
+                console.log(userInfo?.id)
                 setFollowed(!followed)
                 if(error) throw error
             }
@@ -57,7 +61,7 @@ export const PostHeader = ({ userInfo,session,supabase, userName, time, PostOpti
         }
     }
 
-
+    const isPostOwner = postInfo?.user_id == currentUserId
     return (<div className="flex justify-between w-full">
         <div className="flex">
             <img className="w-12 h-12 bg-indigo-500 rounded-lg aspect-square object-cover" src={userInfo?.avatar_url}></img>
@@ -68,29 +72,23 @@ export const PostHeader = ({ userInfo,session,supabase, userName, time, PostOpti
         </div>
         <div>
             {
-                PostOptions === "POST" ? <div><svg onClick={() => console.log("this works")} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
+                PostOptions === "POST" && isPostOwner ? <div>
+                <button id="dropdownMenuIconHorizontalButton" 
+                data-dropdown-offset-skidding="0"
+                data-dropdown-toggle="dropdownDotsHorizontal"  type="button" onClick={()=>setOpenModal(!openModal)}> 
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
                 </svg>
-                <button id="dropdownMenuIconHorizontalButton" data-dropdown-toggle="dropdownDotsHorizontal" className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button"> 
-                <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
-                    <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/>
-                </svg>
                 </button>
-                <div id="dropdownDotsHorizontal" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconHorizontalButton">
+                <div id="dropdownDotsHorizontal" className={`z-10 ${openModal? 'absolute' :  'hidden'} bg-white `}>
+                    <ul className="py-2 text-sm" aria-labelledby="dropdownMenuIconHorizontalButton">
                     <li>
-                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                        <button onClick={()=>router.push(`/post/edit/${postInfo?.id}`)} className="block px-4 py-2 ">edit</button>
                     </li>
                     <li>
-                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
-                    </li>
-                    <li>
-                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+                        <button onClick={()=>deletePost()} className="block px-4 py-2 ">delete</button>
                     </li>
                     </ul>
-                    <div className="py-2">
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Separated link</a>
-                    </div>
                 </div>
                 </div>
                 
@@ -102,7 +100,7 @@ export const PostHeader = ({ userInfo,session,supabase, userName, time, PostOpti
                             </div>
                             : <></>
 
-            }
+}
         </div>
     </div>)
 }

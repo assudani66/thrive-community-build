@@ -1,47 +1,63 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { PostHeader } from './post-components'
-import { Session,createClientComponentClient,createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { Session,createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 
-const CreatePost = ({ session }: { session: Session | null }) => {
+const EditPost = ({ session,postId }: { session: any | null;postId:string }) => {
   const router = useRouter()
   const user = session?.user
   const supabase = createClientComponentClient()
   const [uploadedImage,setUploadedImage] = useState< FileList | [] >([])
   const [postData,setPostData] = useState<string>("")
+  const [postImage,setPostImage] = useState<string | null>("")
   type userInfoTypes = {full_name:string}
   const [userInfo,setUserInfo] = useState< userInfoTypes| null>({}as userInfoTypes) 
+  
+
+  const userId = session?.data?.session?.user?.id
+
+  console.log(userId)
   const getUsers = async() => {
     try {
-      const {data,error} = await supabase.from('profiles').select().eq(
-          'id',session?.user?.id
-      ).single()
-      console.log(data)
-      setUserInfo(data ? data : {})
+      if(userId){
+        const {data,error} = await supabase.from('profiles').select().eq(
+            'id',userId
+        ).single()
+        setUserInfo(data ? data : {})
+      }
     } catch (error) {
       console.error(error)
     }
 }
 
-useEffect(()=>{getUsers()},[])
+const loadPostDetails = async() => {
+  try {
+      const {data,error} = await supabase.from('posts').select().eq('id',postId).single()
+      setPostData(data?.post_info)
+      setPostImage(data?.imagelink)
 
-  const uploadPost = async () => {
+  } catch (error) {
+    
+  }
+}
+
+useEffect(()=>{getUsers(),loadPostDetails()},[])
+
+  const updatePost = async () => {
     try{
      const imageName =  await uploadImage()
-     console.log( imageName,"path of image uploaded")
-
-        const {data,error} = await supabase.from('posts').insert({
-          user_id : user?.id ,
+        const {data,error} = await supabase.from('posts').update({
           post_info:postData,
-          imagelink:imageName ? imageName : ""
-        })
-        router.push("/")
+          imagelink:imageName ? imageName : postImage
+        }).eq('id',postId)
+      router.push("/")
  
     }catch(error){
       console.error(error)
     }
   }
+  
 
   const uploadImage = async() => {
 
@@ -59,24 +75,26 @@ useEffect(()=>{getUsers()},[])
     }
     return ""
   }
-
-
+  console.log(uploadedImage.length>=1 || Boolean(postImage) && "this should print")
   return (
     <div className='w-fit flex-col space-y-2'>
-        <PostHeader PostOptions='CREATE_POST' userName={userInfo?.full_name ? userInfo.full_name : ""}/>
+        {/* <PostHeader userInfo={userInfo} session={session} PostOptions='CREATE_POST'/> */}
         <div>
-        <textarea id="comment" className="w-full p-2 h-fit focus:outline-none" placeholder="Write your content..." onChange={(e)=>setPostData(e.target.value)}/>
+        <textarea id="comment" className="w-full p-2 h-fit focus:outline-none" value={postData} placeholder="Write your content..." onChange={(e)=>setPostData(e.target.value)}/>
         </div>
 
         {/* Images upload */}
-        {
-        uploadedImage.length >= 1  &&
+
+        { (uploadedImage.length >= 1 || Boolean(postImage) ) &&
       <div>
-        <button className='bg-gray-200 font-bold text-black w-10 h-10 rounded-full flex justify-center items-center absolute ' onClick={()=>setUploadedImage([])}>x</button>
+        <button className='bg-gray-200 font-bold text-black w-10 h-10 rounded-full flex justify-center items-center absolute ' onClick={()=>{setUploadedImage([])
+        setPostImage(null)}}>x</button>
         <img className='w-80 h-80 object-cover object-top rounded-lg'
-        src={ uploadedImage.length >= 1  ? URL.createObjectURL(uploadedImage[0]) : ""} alt="fsdfsdf" />
-      </div>
-      }
+        src={ uploadedImage.length >= 1  ? URL.createObjectURL(uploadedImage[0]) : postImage!} 
+
+        alt="post Image" />
+      </div> }
+
         {/* upload File section */}
 
         <div>
@@ -100,11 +118,11 @@ useEffect(()=>{getUsers()},[])
         
         {/* post */}
         <div className='flex w-full justify-items-end'>
-          <button onClick={()=>uploadPost()} className='mainbutton rounded-3xl'>POST</button>
+          <button onClick={()=>updatePost()} className='mainbutton rounded-3xl'>UPDATE</button>
         </div>
 
     </div>
   )
 }
 
-export default CreatePost
+export default EditPost

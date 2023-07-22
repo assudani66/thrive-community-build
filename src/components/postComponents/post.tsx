@@ -14,34 +14,25 @@ type PostProps = {
     postinfo:any
     comments : boolean
     session:any
+    setListPost?:any
+    postList?:any[]
 }
 
-export const Post = ({comments,postinfo,session}:PostProps) => {
+export const Post = ({setListPost,postList, comments,postinfo,session}:PostProps) => {
     
-    const [imageUrl,setImageUrl] = useState("")
     const [userDetails,setUserDetais] = useState<any|null>()
     const [postDetails,setPostDetails] = useState<any>({
-        likes:0,
-        dislike:0
     })
-    // console.log(postinfo)
     
     const supabase = createClientComponentClient()
-    // console.log(postinfo)
 
-// postDetails
-
-    const postImage = async() => {
+    const deletePost  = async() => {
         try {
-            if(postinfo?.imagelink !== ""){
-                const {data,error} = await supabase.storage.from('public_posts').download(postinfo?.imagelink)
-                const url = URL.createObjectURL(data!)
-                console.log(url)
-                setImageUrl(url)
-                if(error) throw error
-            }
+            const {data,error} = await supabase.from('posts').delete().eq("id",postinfo?.id)
+            setListPost(postList?.filter((post)=>post!==postinfo))
+            if(error) throw error
         } catch (error) {
-            console.error(error)
+            console.log(error)
         }
     }
 
@@ -63,20 +54,19 @@ export const Post = ({comments,postinfo,session}:PostProps) => {
         }
     }
     
-    // console.log(userDetails)
-    useEffect(()=>{postImage(),userPostInfo()},[])
+    useEffect(()=>{userPostInfo()},[])
     useEffect(()=>{updatedPostInfo},[])
 
     const PostBody = () =>{
         return(<div>
             <p>{postinfo?.post_info}</p>
-            {postinfo?.imagelink && <img className="w-full aspect-square bg-indigo-500 rounded-lg shadow-[0px_4px_13px_0px_rgba(254,144,99,0.19)]" src={imageUrl}>
+            {postinfo?.imagelink && <img className="w-full aspect-square bg-indigo-500 rounded-lg shadow-[0px_4px_13px_0px_rgba(254,144,99,0.19)] object-cover" src={postinfo?.imagelink}>
         </img>}
         </div>) 
     }
 
     return<div className="flex-col space-y-5 w-full px-8 py-4">
-        <PostHeader userInfo={userDetails} supabase={supabase} session={session} PostOptions="POST" userName={userDetails?.username}/>
+        <PostHeader deletePost = {()=>deletePost()} userInfo={userDetails} postInfo={postinfo} supabase={supabase} session={session} PostOptions="POST" userName={userDetails?.username}/>
         <PostBody/>
         <PostFooter session={session} supabase={supabase} postInfo={postinfo}/>
         {comments && <div>

@@ -9,6 +9,7 @@ export default async function Account() {
     data: { session },
   } = await supabase.auth.getSession()
 
+
   return <>
   <div className='flex items-center justify-center '>
       <div className='flex-col max-w-xs'>

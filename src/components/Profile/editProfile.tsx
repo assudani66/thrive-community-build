@@ -56,7 +56,6 @@ const EditProfile = ({ session }: { session: any | null }) => {
       }
     
       const uploadImage = async() => {
-    
         const imageName = `${user?.id}_${new Date().toISOString()}`
         try{
           if(uploadedImage.length >= 1  ){
