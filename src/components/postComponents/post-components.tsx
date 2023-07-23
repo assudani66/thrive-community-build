@@ -64,8 +64,8 @@ export const PostHeader = ({ deletePost, userInfo,postInfo,session,supabase, use
     return (<div className="flex justify-between w-full">
         <div className="flex">
             <img className="w-12 h-12 bg-indigo-500 rounded-lg aspect-square object-cover" src={userInfo?.avatar_url}></img>
-            <div className="px-4 flex-col justify-between">
-                <p className="text-base">{userName}</p>
+            <div className="px-2 flex-col justify-between">
+                <p className="text-base font-bold">{userName}</p>
                 <p className="text-xs">{time}{time && "ago"}</p>
             </div>
         </div>

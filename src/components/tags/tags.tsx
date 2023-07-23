@@ -24,7 +24,7 @@ const Tags = ({supabase,session}:any) => {
         space-y-4
         '>
             <div className='px-5 flex-col justify-items-end space-y-4'>
-              <Topics_desktop/>
+              {/* <Topics_desktop/> */}
             <h2 className='font-medium text-2xl '>Who to follow</h2>
             {
               followRecomendation.filter((user:any)=>user.id !== session?.data?.session?.user?.id).map(

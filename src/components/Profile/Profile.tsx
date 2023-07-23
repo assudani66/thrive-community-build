@@ -106,13 +106,13 @@ interface User {
             </div>
             <div className={`flex items-center h-full px-7 ${displayfeature.display === "FOLLOWING" ? 'selectedDisplayFeature' : ''} `}>
             <div className='flex-col justify-center text-center' onClick={()=>setDisplayfeature({display:'FOLLOWING'})}>
-            <p>{userInfo.following.length}</p>
+            <p>{userInfo?.following?.length}</p>
             <p className='m-0 p-0'>Following</p>
             </div>
             </div>
             <div className={`flex items-center h-full px-7 ${displayfeature.display === "FOLLOWERS" ? 'selectedDisplayFeature' : ''} `}>
               <div className='flex-col justify-center text-center' onClick={()=>setDisplayfeature({display:'FOLLOWERS'})}>
-                <p>{userInfo.followers.length}</p>
+                <p>{userInfo?.followers?.length}</p>
                 <p className='m-0 p-0'>Follower</p>
               </div>
             </div>
@@ -125,14 +125,14 @@ interface User {
            <div className='flex-col space-y-4'>
             {
               // @ts-ignore
-              userList?.filter((user: User) =>userInfo?.followers.includes(user.id)).map((user)=><PostHeader session={session} supabase={supabase} userInfo={user} userName={user?.username} PostOptions='FOLLOW_REQUEST'/>)
+              userList?.filter((user: User) =>userInfo?.followers?.includes(user.id)).map((user)=><PostHeader session={session} supabase={supabase} userInfo={user} userName={user?.username} PostOptions='FOLLOW_REQUEST'/>)
             }
            </div> : 
            displayfeature.display === "FOLLOWING" ? 
            <div>
             {
               // @ts-ignore
-              userList?.filter((user:any) =>userInfo?.following.includes(user?.id)).map((user)=><PostHeader session={session} supabase={supabase} userInfo={user} userName={user?.username} PostOptions='FOLLOW_REQUEST'/>)
+              userList?.filter((user:any) =>userInfo?.following?.includes(user?.id)).map((user)=><PostHeader session={session} supabase={supabase} userInfo={user} userName={user?.username} PostOptions='FOLLOW_REQUEST'/>)
             }
            </div>:
            displayfeature.display === "BOOKMARK_POSTS"?

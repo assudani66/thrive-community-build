@@ -58,14 +58,14 @@ export const Post = ({setListPost,postList, comments,postinfo,session}:PostProps
     useEffect(()=>{updatedPostInfo},[])
 
     const PostBody = () =>{
-        return(<div>
+        return(<div className=" flex flex-col space-y-2" style={{marginTop:'0.5rem'}}>
             <p>{postinfo?.post_info}</p>
             {postinfo?.imagelink && <img className="w-full aspect-square bg-indigo-500 rounded-lg shadow-[0px_4px_13px_0px_rgba(254,144,99,0.19)] object-cover" src={postinfo?.imagelink}>
         </img>}
         </div>) 
     }
 
-    return<div className="flex-col space-y-5 w-full px-8 py-4">
+    return<div className="flex flex-col space-y-5 w-full  px-2 py-4">
         <PostHeader deletePost = {()=>deletePost()} userInfo={userDetails} postInfo={postinfo} supabase={supabase} session={session} PostOptions="POST" userName={userDetails?.username}/>
         <PostBody/>
         <PostFooter supabase={supabase} postInfo={postinfo}/>

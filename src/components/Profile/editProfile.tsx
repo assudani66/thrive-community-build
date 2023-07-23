@@ -1,10 +1,12 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { useRouter } from 'next/navigation'
 
 const EditProfile = ({ session }: { session: any | null }) => {
 
     const supabase = createClientComponentClient()
+    const router = useRouter()
     const  user = session?.user
     const [uploadedImage,setUploadedImage] = useState< FileList | [] >([])
 
@@ -135,6 +137,8 @@ const EditProfile = ({ session }: { session: any | null }) => {
         <button className='mainbutton w-full rounded-lg' onClick={()=>{
           addInfo()
           uploadPost()
+          router.push("/")
+          
         }} >Update</button>
     </div>
   )
