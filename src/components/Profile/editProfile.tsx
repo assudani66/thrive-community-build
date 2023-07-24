@@ -101,8 +101,8 @@ const EditProfile = ({ session }: { session: any | null }) => {
 
 {
         uploadedImage.length >= 1  &&
-      <div>
-        <button className='bg-gray-200 font-bold text-black w-10 h-10 rounded-full flex justify-center items-center absolute ' onClick={()=>setUploadedImage([])}>x</button>
+      <div className='relative'>
+        <button className='bg-gray-200 font-bold text-black w-10 h-10 rounded-full flex justify-center items-center absolute top-0 right-0' onClick={()=>setUploadedImage([])}>x</button>
         <img className='w-80 h-80 object-cover object-top rounded-lg'
         src={ uploadedImage.length >= 1  ? URL.createObjectURL(uploadedImage[0]) : ""} alt="fsdfsdf" />
       </div>

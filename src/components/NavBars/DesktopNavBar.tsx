@@ -1,4 +1,5 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import ThriveLogo from '../thrivelogo'
 import { usePathname, useRouter } from 'next/navigation'
 import CreatePost from '../postComponents/create-posts'
@@ -6,6 +7,7 @@ import CreatePost from '../postComponents/create-posts'
 const DesktopNavBar = () => {
   const pathname = usePathname()
   const router = useRouter()
+  const [modalState,setModalState] = useState(false)
   return (
     <div className='bg-white h-screen w-full py-5 flex-col
     justify-items-end
@@ -41,19 +43,24 @@ const DesktopNavBar = () => {
       className="mainbutton 
       items-center
       font-bold text-base rounded-[1rem] flex items-center uppercase"
-      // onClick={()=>router.push('/create')}
+      onClick={()=>setModalState(!modalState)}
       >
       create
       </button>
+
       <div className='relative'>
-      <div id="createModal" className="top-0 left-0 right-0 z-50 fixed flex items-center justify-center overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div className="relative max-w-full max-h-full">
-    <div className="relative bg-white rounded-lg shadow">
-      <div className='flex items-center w-full justify-center p-8'>
-        <CreatePost/>
+      <div id="createModal" className={`${modalState ? "" : "hidden"} top-0 left-0 right-0 z-50 fixed flex items-center justify-center overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full`}>
+      <div className="relative max-w-full max-h-full">
+        <div className="relative bg-white rounded-lg shadow">
+          <div className='flex items-center w-full justify-center p-8'>
+            <button className='bg-gray-200 font-bold text-black w-10 h-10 rounded-full flex justify-center items-center absolute top-2 right-2'
+            onClick={()=>setModalState(!modalState)}
+            >x</button>
+            <CreatePost/>
+          </div>
+        </div>
+        </div>
       </div>
-            </div>
-      </div></div>
       </div>
       </div>
     </div>

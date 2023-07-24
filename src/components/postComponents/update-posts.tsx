@@ -57,7 +57,6 @@ useEffect(()=>{getUsers(),loadPostDetails()},[])
       console.error(error)
     }
   }
-  
 
   const uploadImage = async() => {
 
@@ -86,12 +85,11 @@ useEffect(()=>{getUsers(),loadPostDetails()},[])
         {/* Images upload */}
 
         { (uploadedImage.length >= 1 || Boolean(postImage) ) &&
-      <div>
-        <button className='bg-gray-200 font-bold text-black w-10 h-10 rounded-full flex justify-center items-center absolute ' onClick={()=>{setUploadedImage([])
+      <div className='relative'>
+        <button className='bg-gray-200 font-bold text-black w-10 h-10 rounded-full flex justify-center items-center absolute top-2 right-2 opacity-60' onClick={()=>{setUploadedImage([])
         setPostImage(null)}}>x</button>
         <img className='w-80 h-80 object-cover object-top rounded-lg'
         src={ uploadedImage.length >= 1  ? URL.createObjectURL(uploadedImage[0]) : postImage!} 
-
         alt="post Image" />
       </div> }
 
