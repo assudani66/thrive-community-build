@@ -13,9 +13,6 @@ const DesktopNavBar = () => {
     justify-items-end
     space-y-4
     '>
-        <div onClick={()=>console.log("load trending posts")}>
-          <ThriveLogo />
-        </div>
         <div className='px-5 flex-col
     justify-items-end
     space-y-4'>

@@ -80,7 +80,6 @@ interface User {
   id: string;
   username: string;
 }
-console.log(userInfo)
   return (
     <div className='p-0'>
     <img className='w-full  bg-indigo-500 h-40'></img>

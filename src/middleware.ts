@@ -8,9 +8,9 @@ export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
   const supabase = createMiddlewareClient({ req, res })
   const {data}  = await supabase.auth.getSession()
-  const userDetails = await supabase.from('profiles').select('full_name').eq('id',data?.session?.user?.id).single()
-
-  if(!userDetails?.data?.full_name && data.session ){
+  const userDetails = await supabase.from('profiles').select('username').eq('id',data?.session?.user?.id).single()
+  
+  if(!userDetails?.data?.username && data.session ){
     return NextResponse.redirect(new URL('/profile/edit',req.nextUrl))
   }
 

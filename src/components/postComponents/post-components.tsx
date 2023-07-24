@@ -96,7 +96,6 @@ export const PostHeader = ({ deletePost, userInfo,postInfo,session,supabase, use
                         : PostOptions === "FOLLOW_REQUEST" ?
                             <div className="flex-col items-center justify-center" >
                                  <button className='mainbutton 
-                                 items-center
                                  font-bold text-xs rounded-[1rem] flex items-center' onClick={()=>followUser()} > {followed ? "Follow" : "Unfollow"}
                                 </button>
                             </div>
