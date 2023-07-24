@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react'
-import ThriveLogo from '../thrivelogo'
+import ThriveLogo from '../icons/thrivelogo'
 import { usePathname, useRouter } from 'next/navigation'
 import CreatePost from '../postComponents/create-posts'
 
@@ -40,8 +40,7 @@ const DesktopNavBar = () => {
       </div>
       <button 
       data-modal-target="createModal"
-      className="mainbutton 
-      items-center
+      className="mainbutton
       font-bold text-base rounded-[1rem] flex items-center uppercase"
       onClick={()=>setModalState(!modalState)}
       >

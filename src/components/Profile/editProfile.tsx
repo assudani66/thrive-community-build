@@ -9,7 +9,7 @@ const EditProfile = ({ session }: { session: any | null }) => {
     const router = useRouter()
     const  user = session?.user
     const [uploadedImage,setUploadedImage] = useState< FileList | [] >([])
-
+    const [postImage,setPostImage] = useState<string | null>("")
     const [userInfo,setUserInfo] = useState({
         username:"",
         full_name:"",
@@ -28,6 +28,8 @@ const EditProfile = ({ session }: { session: any | null }) => {
                 website:data?.website
                 }
             )
+            setPostImage(data?.avatar_url)
+            
             if(error) throw error
         } catch (error) {
             console.log(error)
@@ -99,20 +101,20 @@ const EditProfile = ({ session }: { session: any | null }) => {
     <div className='flex-col space-y-4'>
 
 
-{
-        uploadedImage.length >= 1  &&
-      <div className='relative'>
-        <button className='bg-gray-200 font-bold text-black w-10 h-10 rounded-full flex justify-center items-center absolute top-0 right-0' onClick={()=>setUploadedImage([])}>x</button>
-        <img className='w-80 h-80 object-cover object-top rounded-lg'
-        src={ uploadedImage.length >= 1  ? URL.createObjectURL(uploadedImage[0]) : ""} alt="fsdfsdf" />
-      </div>
-      }
+
 
 <div>
+          { (uploadedImage.length >= 1 || Boolean(postImage) ) &&
+        <div className='relative'>
+          <button className='bg-gray-200 font-bold text-black w-10 h-10 rounded-full flex justify-center items-center absolute top-2 right-2 opacity-60' onClick={()=>{setUploadedImage([])
+          setPostImage(null)}}>x</button>
+          <img className='w-80 h-80 object-cover object-top rounded-lg'
+          src={ uploadedImage.length >= 1  ? URL.createObjectURL(uploadedImage[0]) : postImage!} 
+          alt="post Image" />
+        </div> }
       <div className="flex items-center">
         <label>
             <input className="text-sm cursor-pointer px-4 hidden  " type="file" onChange={(e)=>{
-              console.log('changes')
               setUploadedImage(e.target.files!)}} />
               <div className='flex items-center mx-4' onClick={()=>console.log("this uploades")}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 36 36" fill="none">

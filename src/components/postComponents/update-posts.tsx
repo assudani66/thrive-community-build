@@ -94,7 +94,6 @@ useEffect(()=>{getUsers(),loadPostDetails()},[])
       </div> }
 
         {/* upload File section */}
-
         <div>
             <div className="flex items-center">
         <label>
@@ -114,9 +113,9 @@ useEffect(()=>{getUsers(),loadPostDetails()},[])
             </div>
         </div>
         
-        {/* post */}
-        <div className='flex w-full justify-items-end'>
-          <button onClick={()=>updatePost()} className='mainbutton rounded-3xl'>UPDATE</button>
+        {/* update */}
+        <div className='flex w-full items-end justify-end '>
+          <button onClick={()=>updatePost() } className='mainbutton rounded-3xl'>UPDATE</button>
         </div>
 
     </div>

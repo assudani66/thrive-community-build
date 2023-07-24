@@ -1,0 +1,1 @@
+export { defaultAvatar } from "./constants";

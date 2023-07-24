@@ -1,0 +1,1 @@
+export const defaultAvatar = 'https://gpaswjuhkhvsrqsvfxdv.supabase.co/storage/v1/object/public/avatars/7cee6fa507169843e3430a90dd5377d4.jpg'

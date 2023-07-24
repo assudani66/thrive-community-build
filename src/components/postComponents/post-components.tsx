@@ -61,9 +61,10 @@ export const PostHeader = ({ deletePost, userInfo,postInfo,session,supabase, use
     }
 
     const isPostOwner = postInfo?.user_id == session?.data?.session?.user?.id
+
     return (<div className="flex justify-between w-full">
         <div className="flex">
-            <img className="w-12 h-12 bg-indigo-500 rounded-lg aspect-square object-cover" src={userInfo?.avatar_url}></img>
+            <img className="w-12 h-12 bg-indigo-500 rounded-lg aspect-square object-cover" src={userInfo?.avatar_url ? userInfo.avatar_url : "https://gpaswjuhkhvsrqsvfxdv.supabase.co/storage/v1/object/public/avatars/7cee6fa507169843e3430a90dd5377d4.jpg"}></img>
             <div className="px-2 flex-col justify-between">
                 <p className="text-base font-bold">{userName}</p>
                 <p className="text-xs">{time}{time && "ago"}</p>
