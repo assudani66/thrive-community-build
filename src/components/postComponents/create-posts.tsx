@@ -4,7 +4,9 @@ import { PostHeader } from './post-components'
 import { Session,createClientComponentClient,createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 
-const CreatePost = ({ session }: { session: Session | null }) => {
+const CreatePost = () => {
+  const [session,setSession] = useState<Session|null>()
+
   const router = useRouter()
   const user = session?.user
   const supabase = createClientComponentClient()
@@ -12,8 +14,10 @@ const CreatePost = ({ session }: { session: Session | null }) => {
   const [postData,setPostData] = useState<string>("")
   type userInfoTypes = {full_name:string}
   const [userInfo,setUserInfo] = useState< userInfoTypes| null>({}as userInfoTypes) 
+
   const getUsers = async() => {
     try {
+      const {data: { session }} = await supabase.auth.getSession()
       const {data,error} = await supabase.from('profiles').select().eq(
           'id',session?.user?.id
       ).single()
@@ -28,11 +32,12 @@ useEffect(()=>{getUsers()},[])
 
   const uploadPost = async () => {
     try{
+      const {data: { session }} = await supabase.auth.getSession()
+      console.log(session)
      const imageName =  await uploadImage()
-     console.log( imageName,"path of image uploaded")
 
         const {data,error} = await supabase.from('posts').insert({
-          user_id : user?.id ,
+          user_id : session?.user?.id ,
           post_info:postData,
           imagelink:imageName ? imageName : ""
         })
@@ -49,9 +54,11 @@ useEffect(()=>{getUsers()},[])
 
     try{
       if(uploadedImage.length >= 1  ){
+        const {data: { session }} = await supabase.auth.getSession()
         const {data,error} = await supabase.storage.from('public_posts').upload(imageName,uploadedImage[0])
+
         const uploadedUrl = await supabase.storage.from('public_posts').getPublicUrl(data?.path as string)
-        console.log(uploadedUrl.data.publicUrl)
+
         return uploadedUrl.data.publicUrl as string
       }
     }catch(error){
