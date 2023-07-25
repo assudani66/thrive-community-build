@@ -44,7 +44,6 @@ const Profile = ({userId}:{userId:any}) => {
     }
 }
 
-
 const getUserList = async() => {
   try{
     const {data} = await supabase.from('profiles').select()
@@ -55,7 +54,7 @@ const getUserList = async() => {
   }
 }
 
-const getAllPosts = async() => {
+const getUserPostList = async() => {
   try{
     const {data,error} = await supabase.from("posts").select().order('created_at',{ascending:false}).eq('user_id',userId)
     setListofPost(data as any)
@@ -72,7 +71,7 @@ useEffect(()=>{
   if(userId){
     getUserInfo()
     setDisplayfeature({display:"POSTS"})
-    getAllPosts()
+    getUserPostList()
   }
 },[userId])
 
@@ -105,13 +104,13 @@ interface User {
           <div className='bg-indigo-500 h-fit flex justify-between rounded-lg text-white items-center'>
             <div className={`flex items-center h-full px-7 ${displayfeature.display === "POSTS" ? 'selectedDisplayFeature' : ''} `} onClick={()=>setDisplayfeature({display:'POSTS'})}>
             <div className='flex-col justify-center text-center' >
-            <p>1</p>
+            <p>{listOfPost?.length}</p>
             <p className='m-0 p-0'>Posts</p>
             </div>
             </div>
             <div className={`flex items-center h-full px-7 ${displayfeature.display === "FOLLOWING" ? 'selectedDisplayFeature' : ''} `}>
             <div className='flex-col justify-center text-center' onClick={()=>setDisplayfeature({display:'FOLLOWING'})}>
-            <p>{userInfo?.following?.length}</p>
+            <p>{userInfo?.following?.length ?? 0}</p>
             <p className='m-0 p-0'>Following</p>
             </div>
             </div>
