@@ -16,12 +16,16 @@ const EditPage = ({params}:{params:{id:string}}) => {
       console.log(error)
     }
   }
+  
   useEffect(()=>{getCurrentUserSession()},[])
 
   return (
-
-    <div>
-        <EditPost session={session}  postId={params.id}/>
+    <div className='flex items-center justify-center '>
+        <div className='flex-col max-w-xs'>
+          <div className='flex-col max-w-xs col-start-2 space-y-4 justify-start items-start'>
+            <EditPost session={session}  postId={params.id}/>
+        </div>
+      </div>
     </div>
   )
 }

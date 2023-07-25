@@ -37,7 +37,6 @@ const ResponsiveGrid = ({currentPage}:{currentPage:'PROFILE'| 'POSTS'}) => {
       }else{
         setPostList(data ?? [])
       }
-
       if(error) throw error
     }
     catch(error){
