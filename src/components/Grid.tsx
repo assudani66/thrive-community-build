@@ -70,7 +70,6 @@ const ResponsiveGrid = ({currentPage}:{currentPage:'PROFILE'| 'POSTS'}) => {
                </div>
                }
               {currentPage === 'PROFILE' && <Profile userId={session?.data?.session?.user?.id} />}
-              
             </div>
             <div className='p-4 w-full h-screen hidden md:block '>
               <SearchInput/>
